@@ -1,0 +1,119 @@
+.register-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url('/public/images/register-background.jpeg');
+  background-size: cover;
+  background-position: center;
+}
+
+.register-form-container{
+  width: 700px;
+  max-height: 600px;
+  padding: 40px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  overflow-y: auto;
+  color: #1B4235;
+}
+
+.form-section {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-right: 30px;
+}
+
+.input-wrapper:last-child {
+  margin-right: 0;
+}
+
+label {
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="tel"],
+input[type="email"],
+input[type="date"]
+{
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 2px solid #1B4235;
+  border-radius: 4px;
+  background: #F1EBE5;
+  height: 25px;
+}
+
+select{
+  padding: 8px;
+  height: 45px;
+  border: 2px solid #1B4235;
+  border-radius: 4px;
+  background: #F1EBE5;
+  margin-bottom: 10px;
+}
+.interests-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.interest-item {
+  flex: 0 0 calc(20% - 10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: #F1EBE5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.interest-item:hover {
+  transform: scale(1.05);
+}
+
+.interests-icon{
+  width: 50px;
+  height: 50px;
+  margin-bottom: 10px;
+}
+
+.interest-item.selected {
+  border-color: #007bff;
+}
+
+.button-container{
+  display: flex;
+  justify-content: center;
+}
+button {
+  padding: 10px;
+  margin:10px;
+  width:50%;
+  background-color: #2E6D58;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover{
+
+}

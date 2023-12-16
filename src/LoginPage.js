@@ -37,7 +37,7 @@ function LoginPage() {
 							onChange={(e) => setPassword(e.target.value)}
 						/>
 						<img
-							src={showPassword ? "/show.png" : "/hide.png"}
+							src={showPassword ? "/images/show.png" : "/images/hide.png"}
 							alt="Show password"
 							onClick={showPasswordOrNot}
 							className="password-icon"
@@ -45,7 +45,7 @@ function LoginPage() {
 					</div>
 					<button className="login-button" type="submit">Sign In</button>
 				</form>
-				<a className="loginLink" href="/forgot-password" >Forget Password</a>
+				<a className="loginLink" href="/forgot-password">Forget Password</a>
 				<div className="register-link">
 				  Not a member yet? <Link className="loginLink" to="/register">Register now</Link>
 				</div>
