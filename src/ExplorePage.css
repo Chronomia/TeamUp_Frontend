@@ -1,0 +1,62 @@
+.explore-page{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-image: url('/public/images/explore.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.explore-container{
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    text-align: center;
+    width: 95%;
+    height: 95%;
+    display: flex;
+    overflow-y: hidden;
+}
+
+.home-button {
+    width: 50px;
+    height: 50px;
+    background: transparent;
+
+}
+
+.home-button:hover{
+    background: transparent;
+}
+.events-groups-container{
+}
+
+.select-to-view{
+    display: flex;
+    margin: 20px;
+}
+
+.select-to-view .active {
+    text-decoration: none;
+    background: transparent;
+    padding: 10px;
+    color: #184234;
+    font-weight: bold;
+    border-bottom: 2px solid #184234;
+    cursor: pointer;
+
+}
+
+.select-to-view .inactive {
+    text-decoration: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 10px;
+    border: none;
+    color: #184234;
+}
+
+.detail-content{
+    margin: 40px;
+}
+

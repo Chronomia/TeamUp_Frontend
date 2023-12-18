@@ -131,7 +131,7 @@ function HomePage() {
                     </div>
                     <div ref={groupsRef} id="groups" className="section">
                         <div className="groups-section">
-                            <h2 className="section-title">Your groups ({groups.length})</h2>
+                            <h2 className="section-title">Joined groups ({groups.length})</h2>
                             {groups.length > 0 ? (
                                 groups.map((group) => (
                                     <div key={group.id}>{group.name}</div>
@@ -155,7 +155,7 @@ function HomePage() {
                     </div>
                     <div ref={eventsRef} id="events" className="section">
                         <div className="events-section">
-                            <h2 className="section-title">Your Events ({groups.length})</h2>
+                            <h2 className="section-title">Joined Events ({groups.length})</h2>
                             {events.length > 0 ? (
                                 events.map((event) => (
                                     <div key={event.id}>{event.name}</div>
@@ -187,7 +187,19 @@ function HomePage() {
                               </div>
                             ))}
                         </div>
-                        <h2 className="section-title">Explore all events</h2>
+                        <h2 className="section-title">Create your own groups/events</h2>
+                        <div className="search-more-container" onClick={handleSearchGroups}>
+                            <div className="left-search">
+                                <button className="search-button">
+                                    <img src="/images/search.png" alt="Search" />
+                                </button>
+                                <div className="search-text">
+                                    <h2>Join more events</h2>
+                                    <p>Discover more on our site.</p>
+                                </div>
+                            </div>
+                            <img src="/images/search-image.jpg" className="search-image" alt="Search-image" />
+                        </div>
                     </div>
                 </div>
             </div>

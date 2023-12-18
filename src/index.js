@@ -5,6 +5,7 @@ import LoginPage from './LoginPage';
 import RegisterPage from './RegisterPage';
 import ForgotPage from './ForgotPage';
 import HomePage from './HomePage';
+import ExplorePage from "./ExplorePage";
 import './index.css';
 
 ReactDOM.render(
@@ -14,6 +15,7 @@ ReactDOM.render(
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot-password" element={<ForgotPage />} />
           <Route path="/home" element={<HomePage />} />
+          <Route path="/explore" element={<ExplorePage />} />
           <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
   </Router>,
