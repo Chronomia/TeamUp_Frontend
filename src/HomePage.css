@@ -250,3 +250,98 @@
     transform: rotate(10deg);
     border-radius: 10px;
 }
+
+.create-button{
+    background: rgba(27, 66, 53, 0.7);
+}
+
+.outside-window {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.window-content {
+    height: 70%;
+    width: 55%;
+    padding: 20px;
+    background-color: whitesmoke;
+    border-radius: 10px;
+    position: relative;
+    z-index: 1001;
+    overflow-y: auto;
+}
+
+.close-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.create-new-container{
+    overflow-y: auto;
+}
+
+.create-form-container{
+    margin-top: 15px;
+    display: flex;
+    margin-left: 5%;
+    width: 60%;
+}
+
+.create-new-wrapper{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 60%;
+    margin-left: 5%;
+}
+
+.create-new-wrapper input, select{
+    background: transparent;
+    border-radius: 10px;
+    border: 2px solid #2E6D58;
+}
+
+.input-number {
+    background: transparent;
+    border-radius: 10px;
+    border: 2px solid #2E6D58;
+    height: 10px;
+    padding: 20px;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+
+.form-buttons {
+    margin: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-buttons button {
+    margin-left: 5%;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    background-color: #2E6D58;
+}
+
+.form-buttons button:hover {
+    background-color: #1B4235;
+}
+
+.form-buttons button:last-child {
+    margin-right: 0;
+}
