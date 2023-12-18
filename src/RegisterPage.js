@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-//import axios from 'axios';
 import "./RegisterPage.css";
 import {useNavigate} from "react-router-dom";
 
@@ -202,7 +201,7 @@ function RegisterPage() {
                           <div
                             key={interest.id}
                             className={`interest-item ${selectedInterests.includes(interest.id) ? 'selected' : ''}`}
-                            onClick={() => toggleInterest(interest.id)}
+                            onClick={() => toggleInterest(interest.name)}
                           >
                             <img src={`/images/${interest.id}.png`} alt={interest.name} className={'interests-icon'}/>
                             <span>{interest.name}</span>

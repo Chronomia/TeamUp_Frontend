@@ -6,12 +6,36 @@ function LoginPage() {
 	const [username, setUsername] = useState(""); // State for the username input
 	const [password, setPassword] = useState(""); // State for the password input
 	const [showPassword, setShowPassword] = useState(false);
-	//const [currentPage, setCurrentPage] = useState('login');
 	const navigate = useNavigate();
 
 	const handleLogin = (event) => {
 		event.preventDefault();
-		navigate('/home');
+		const userData = new URLSearchParams();
+		userData.append("username", username);
+		userData.append("password", password);
+		const url = "http://ec2-44-219-26-13.compute-1.amazonaws.com:8000/token";
+		const options = {
+			method: 'POST',
+			headers: {
+			'Content-Type': 'application/x-www-form-urlencoded',
+			},
+			body: userData
+		};
+		fetch(url, options)
+			.then(response => response.json())
+			.then(data => {
+				if (data.detail) {
+                alert(data.detail);
+            	}
+				else{
+					console.log('Success:', data);
+					navigate('/home', { state: { username: username } });
+				}
+			})
+		.catch(error => {
+			console.error('There was an error!', error);
+		});
+
 	};
 
 	const showPasswordOrNot = () => {
@@ -49,7 +73,7 @@ function LoginPage() {
 				</form>
 				<a className="loginLink" href="/forgot-password">Forget Password</a>
 				<div className="register-link">
-				  Not a member yet? <Link className="loginLink" to="/register">Register now</Link>
+					Not a member yet? <Link className="loginLink" to="/register">Register now</Link>
 				</div>
 			</div>
 		</div>
