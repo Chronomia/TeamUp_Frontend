@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import "./LoginPage.css";
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function LoginPage() {
 	const [username, setUsername] = useState(""); // State for the username input
 	const [password, setPassword] = useState(""); // State for the password input
 	const [showPassword, setShowPassword] = useState(false);
 	const [currentPage, setCurrentPage] = useState('login');
+	const navigate = useNavigate();
 
 	const handleLogin = (event) => {
 		event.preventDefault();
+		navigate('/home');
 	};
 
 	const showPasswordOrNot = () => {
@@ -20,7 +22,7 @@ function LoginPage() {
 		<div className="login-page">
 			<div className="login-form-container">
 				<h1>Welcome Back</h1>
-				<form onSubmit={{handleLogin}}>
+				<form onSubmit={handleLogin}>
 					<div className="input-group">
 						<input
 							type='text'

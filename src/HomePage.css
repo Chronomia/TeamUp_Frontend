@@ -1,0 +1,252 @@
+.home-page{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-image: url('/public/images/home.jpeg');
+    background-size: cover;
+    background-position: center;
+}
+
+.user-container{
+    background-color: rgba(223, 211, 211, 0.8);
+    border-radius: 8px;
+    text-align: center;
+    width: 95%;
+    height: 95%;
+    display: flex;
+    overflow-y: hidden;
+}
+
+.sidebar {
+    background: rgba(124, 117, 117, 0.8);
+    border-radius: 8px;
+    height: 95%;
+    width: 16%;
+    color: #181007;
+    padding: 20px;
+    justify-content: space-between;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.welcome-heading::after {
+    content: '';
+    display: block;
+    border-radius: 2px;
+    width: 95%;
+    height: 2px;
+    background-color: rgba(55, 61, 59, 0.9);
+    margin: 10px auto 40px;
+}
+
+.sidebar-item {
+    cursor: pointer;
+    padding: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+    border: 2px;
+    border-radius: 8px;
+    color: white;
+    transition: transform 0.3s;
+}
+
+.sidebar-item:hover{
+    background: #7C7575;
+    transform: scale(1.05);
+}
+
+.sidebar-item.active {
+    color: #181007;
+    font-weight: bold;
+    background: #F1EBE5;
+}
+
+.logout-section{
+    margin-top: 48vh;
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-weight: bold;
+    color: #F1EBE5;
+}
+
+.logout-section img{
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+    margin-left: 10%;
+}
+
+.main-content {
+    height: 95%;
+    width: 80%;
+    padding: 20px;
+    overflow-y: auto;
+    flex-direction: column;
+}
+
+.section {
+    margin-bottom: 20px;
+}
+
+.profile-content {
+    background-color: rgba(255, 255, 255, 0.6);
+    width:80%;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flexDirection: column;
+}
+
+.profile-detail{
+    background: rgba(27, 66, 53, 0.7);
+    border-radius: 8px;
+    width: 50%;
+    font-weight: bold;
+}
+
+.detail-box{
+    display: flex;
+    align-items: center;
+    margin-left: 5%;
+    color: #F1EBE5;
+}
+
+.profile-detail img{
+    width: 20px;
+    height: 20px;
+    margin-right:10px;
+}
+
+.right-content{
+    width: 50%;
+    height: 100%;
+    margin-left: 5%;
+    flexDirection: column;
+}
+
+.top-right-content{
+    background: rgba(232, 202, 206, 0.7);
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.interest-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin: 5px 0;
+    text-align: center;
+}
+
+.interests-item {
+    flex: 0 0 calc(20% - 10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px;
+    border-radius: 8px;
+    background-color: #F1EBE5;
+    justify-content: center;
+    color: #1B4235;
+}
+
+.interest-icon{
+    width: 30px;
+    height: 30px;
+    margin-bottom: 6px;
+}
+.edit-profile-button{
+    background: rgba(207, 130, 130, 0.8);
+    color: #1B4235;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    height: 13%;
+    font-weight: bold;
+    transition: transform 0.3s;
+}
+
+.edit-profile-button:hover{
+    transform: scale(1.05);
+    background: rgba(207, 130, 130, 0.8);
+}
+
+.explore-interest{
+    width: 65px;
+    height: 65px;
+    margin-bottom: 10px;
+    margin-top:10px;
+
+}
+
+.section-title{
+    text-align: left;
+    margin-left: 5%;
+}
+
+.groups-section{
+
+}
+
+.events-section{
+
+}
+
+.search-more-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    width: 72%;
+    margin-left: 10%;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.6);
+    height: 80px;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.left-search{
+    display: flex;
+    width:60%;
+}
+
+.search-button {
+    background-color: rgba(184, 131, 100, 0.6);
+    border: none;
+    cursor: pointer;
+    width: 80px;
+    height: 80px;
+}
+
+.search-button:hover{
+    background-color: rgba(184, 131, 100, 0.6);
+}
+
+.search-button img {
+    height: 100%;
+    width: 100%;
+}
+
+.search-text{
+    text-align: left;
+}
+
+.search-image-container{
+    align-items: center;
+}
+
+.search-image{
+    height: 250px;
+    width: 40%;
+    margin-right: -100px;
+    transform: rotate(10deg);
+    border-radius: 10px;
+}
