@@ -1,17 +1,18 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useState} from "react";
 import { useNavigate } from 'react-router-dom';
 import "./ExplorePage.css";
 
 function ExplorePage() {
     const navigate = useNavigate();
     const handleBackToHome = () => navigate('/home');
-    const [activeTab, setActiveTab] = useState('events');
+
+    const [activeTab, setActiveTab] = useState('groups');
 
     return(
         <div className="explore-page">
             <div className="explore-container">
                 <button className="home-button" onClick={handleBackToHome}>
-                    <img src="/images/backttoHome.png" style={{width:"50px;", height:"50px"}}></img>
+                    <img src="/images/backttoHome.png" style={{width:"50px;", height:"50px"}} alt={"back home page"}></img>
                 </button>
                 <div className="events-groups-container">
                     <div className="select-to-view">

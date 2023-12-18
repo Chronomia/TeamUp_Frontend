@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./ForgotPage.css";
-import { Link } from 'react-router-dom';
+
 function ForgotPage() {
     const [step, setStep] = useState(1);
     const [username, setUsername] = useState('');

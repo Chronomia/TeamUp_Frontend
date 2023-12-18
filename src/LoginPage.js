@@ -6,7 +6,7 @@ function LoginPage() {
 	const [username, setUsername] = useState(""); // State for the username input
 	const [password, setPassword] = useState(""); // State for the password input
 	const [showPassword, setShowPassword] = useState(false);
-	const [currentPage, setCurrentPage] = useState('login');
+	//const [currentPage, setCurrentPage] = useState('login');
 	const navigate = useNavigate();
 
 	const handleLogin = (event) => {

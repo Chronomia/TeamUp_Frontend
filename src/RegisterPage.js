@@ -1,42 +1,82 @@
 import React, { useState } from "react";
+//import axios from 'axios';
 import "./RegisterPage.css";
+import {useNavigate} from "react-router-dom";
 
 function RegisterPage() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [contact, setContact] = useState("");
-  const [location, setLocation] = useState("");
-  const [birthDate, setBirthDate] = useState("");
-  const [gender, setGender] = useState("");
-  const [selectedInterests, setSelectedInterests] = useState("");
+    const navigate = useNavigate();
 
-  const handleRegister = (event) => {
-    event.preventDefault();
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [email, setEmail] = useState("");
+    const [contact, setContact] = useState("");
+    const [location, setLocation] = useState("");
+    const [age, setAge] = useState("");
+    const [gender, setGender] = useState("");
+    const [selectedInterests, setSelectedInterests] = useState("");
 
+    const handleRegister = (event) => {
+        event.preventDefault();
+        const userData = {
+            "username": username,
+            "first_name": firstName,
+            "last_name": lastName,
+            "email": email,
+            "contact": contact,
+            "location": location,
+            "interests": selectedInterests,
+            "age": age,
+            "gender": gender,
+            "_id": "string",
+            "friends": [],
+            "password": password
+        }
+        fetch('http://ec2-44-219-26-13.compute-1.amazonaws.com:8000/users/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.detail) {
+                alert(data.detail);
+            }
+            else{
+                console.log('Success:', data);
+                alert(`User created successfully! Welcome, ${data.username}.`);
+            }
 
-  }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
 
-  const interests = [
-      {id: "travel", name: "Travel"},
-      {id: "food", name: "Food"},
-      {id: "health", name: "Health & Fitness"},
-      {id: "game", name: "Gaming"},
-      {id: "technology", name: "Technology & Programming"},
-      {id: "arts", name: "Arts & Creativity"},
-      {id: "movie", name: "Movies & Entertainment"},
-      {id: "music", name: "Music"}
-  ];
+    const interests = [
+        {id: "travel", name: "Travel"},
+        {id: "food", name: "Food"},
+        {id: "health", name: "Health & Fitness"},
+        {id: "game", name: "Gaming"},
+        {id: "technology", name: "Technology & Programming"},
+        {id: "arts", name: "Arts & Creativity"},
+        {id: "movie", name: "Movies & Entertainment"},
+        {id: "music", name: "Music"}
+    ];
 
-  const toggleInterest = (interest) => {
-    setSelectedInterests(prevSelectedInterests =>
-      prevSelectedInterests.includes(interest)
-        ? prevSelectedInterests.filter(i => i !== interest)
-        : [...prevSelectedInterests, interest]
-    );
-  };
+    const toggleInterest = (interest) => {
+        setSelectedInterests(prevSelectedInterests =>
+            prevSelectedInterests.includes(interest) ? prevSelectedInterests.filter(i => i !== interest) : [...prevSelectedInterests, interest]
+        );
+    };
+
+  const handleGoBack = (event) => {
+		event.preventDefault();
+		navigate('/login');
+	};
 
   return (
       <div className="register-page">
@@ -50,6 +90,7 @@ function RegisterPage() {
                           <input
                               id="user-name"
                               type="text"
+                              className="register-input"
                               value={username}
                               onChange={(e) => setUsername(e.target.value)}
                               required
@@ -60,6 +101,7 @@ function RegisterPage() {
                           <input
                               id="pass-word"
                               type="password"
+                              className="register-input"
                               value={password}
                               onChange={(e) => setPassword(e.target.value)}
                               required
@@ -73,6 +115,7 @@ function RegisterPage() {
                           <input
                               id="first-name"
                               type="text"
+                              className="register-input"
                               value={firstName}
                               onChange={(e) => setFirstName(e.target.value)}
                               required
@@ -83,6 +126,7 @@ function RegisterPage() {
                           <input
                               id="last-name"
                               type="text"
+                              className="register-input"
                               value={lastName}
                               onChange={(e) => setLastName(e.target.value)}
                               required
@@ -96,6 +140,7 @@ function RegisterPage() {
                           <input
                               id="email-address"
                               type="email"
+                              className="register-input"
                               value={email}
                               onChange={(e) => setEmail(e.target.value)}
                               required
@@ -106,6 +151,7 @@ function RegisterPage() {
                           <input
                               id="contact-number"
                               type="tel"
+                              className="register-input"
                               value={contact}
                               onChange={(e) => setContact(e.target.value)}
                               required
@@ -119,6 +165,7 @@ function RegisterPage() {
                           <input
                               id="city-state"
                               type="text"
+                              className="register-input"
                               value={location}
                               onChange={(e) => setLocation(e.target.value)}
                               required
@@ -129,13 +176,16 @@ function RegisterPage() {
                   <div className="form-section">
                       <div className="input-wrapper">
                           <input
-                              id="birth-date"
-                              type="date"
-                              value={birthDate}
-                              onChange={(e) => setBirthDate(e.target.value)}
+                              id="user-age"
+                              type="number"
+                              min="1"
+                              max="150"
+                              className="register-input"
+                              value={age}
+                              onChange={(e) => setAge(e.target.value)}
                               required
                           />
-                          <label htmlFor="birth-date">Birth Date</label>
+                          <label htmlFor="user-age">Age</label>
                       </div>
                       <div className="input-wrapper">
                           <select id="gender-select" value={gender} onChange={(e) => setGender(e.target.value)}>
@@ -161,6 +211,7 @@ function RegisterPage() {
                   </div>
                   <div className="button-container">
                       <button className="button" type="submit">Complete</button>
+                      <button className="button" onClick={handleGoBack}>Return to signin</button>
                   </div>
               </form>
           </div>
@@ -169,7 +220,6 @@ function RegisterPage() {
 
       </div>
   );
-
-};
+}
 
 export default RegisterPage;

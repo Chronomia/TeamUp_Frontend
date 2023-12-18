@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import { useNavigate } from 'react-router-dom';
 import "./HomePage.css";
-import { Link } from 'react-router-dom';
 function HomePage() {
     const navigate = useNavigate();
 
@@ -69,7 +68,7 @@ function HomePage() {
     };
 
     const handleSearchGroups = () => {
-        console.log("Navigate to groups page");
+        navigate("/explore");
     };
 
     const [isWindowOpen, setIsWindowOpen] = useState(false);
@@ -123,7 +122,7 @@ function HomePage() {
     const [event_duration, setEventDuration] = useState(15);
     const [event_category, setEventCategory] = useState("");
     const [event_form, setEventForm] = useState("");
-    const [event_organizer, setEventOrganizer] = useState("");
+    const [setEventOrganizer] = useState("");
     const [event_group, setEventGroup] = useState("");
 
     const [isGroupOrganizer, setGroupOrganizer] = useState(false);
@@ -420,6 +419,19 @@ function HomePage() {
                                                             <option value="Music">Music</option>
                                                         </select>
                                                         <label htmlFor="event-interest">Related Categories</label>
+                                                    </div>
+                                                </div>
+                                                <div className="create-form-container">
+                                                    <div className="create-new-wrapper">
+                                                        <input
+                                                            id="event-form"
+                                                            type="text"
+                                                            value={event_form}
+                                                            onChange={(e) => setEventForm(e.target.value)}
+                                                            disabled={!isGroupOrganizer}
+                                                            required
+                                                        />
+                                                        <label htmlFor="event-capacity">Capacity</label>
                                                     </div>
                                                 </div>
                                             </form>
