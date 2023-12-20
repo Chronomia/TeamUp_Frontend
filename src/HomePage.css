@@ -62,8 +62,25 @@
     background: #F1EBE5;
 }
 
+.delete-section{
+    margin-top: 40vh;
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-weight: bold;
+    color: #F1EBE5;
+}
+
+.delete-section img{
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    margin-left: 13%;
+}
+
 .logout-section{
-    margin-top: 48vh;
+    margin-top: 1vh;
     cursor: pointer;
     display: flex;
     justify-content: flex-start;
@@ -450,4 +467,21 @@
     width: 20px;
     height: 20px;
     margin-left: 20px;
+}
+
+.delete-yes{
+    background: #CF8282;
+}
+
+.delete-yes:hover{
+    background: #CF8282;
+}
+
+.delete-no{
+    background: #f1ebe5;
+    color: #CF8282;
+}
+.delete-no:hover{
+    background: #f1ebe5;
+    color: #CF8282;
 }

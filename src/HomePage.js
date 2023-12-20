@@ -71,7 +71,7 @@ function HomePage() {
 
     const handleLogout = () => {
         navigate('/login');
-};
+    };
 
     const handleNavigate = (ref) => {
         ref.current.scrollIntoView({ behavior: 'smooth' });
@@ -239,6 +239,27 @@ function HomePage() {
         navigate('/explore', { state: { user: username,  groupCategory: interest} })
     }
 
+    const [deleteWindow, setDeleteWindow] = useState(false);
+    const openDeleteWindow = () => {
+        setDeleteWindow(true);
+    }
+
+    const closeDeleteWindow = () => {
+        setDeleteWindow(false);
+    }
+    const handleDeleteAccount = () =>{
+        fetch(`http://ec2-44-219-26-13.compute-1.amazonaws.com:8000/users/${id}`, {
+            method: 'DELETE',
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+            })
+            .catch(error => {
+                console.error('Error deleting user account:', error);
+            });
+        navigate('/login');
+    }
 
     return(
         <div className="home-page">
@@ -249,6 +270,17 @@ function HomePage() {
                     <div className={`sidebar-item ${activeSection === 'groups' ? 'active' : ''}`} onClick={() => handleNavigate(groupsRef)}>Joined Groups</div>
                     <div className={`sidebar-item ${activeSection === 'events' ? 'active' : ''}`} onClick={() => handleNavigate(eventsRef)}>Joined Events</div>
                     <div className={`sidebar-item ${activeSection === 'explores' ? 'active' : ''}`} onClick={() => handleNavigate(eventsRef)}>Explore</div>
+                    <div className="delete-section" onClick={openDeleteWindow}>
+                        <img src="/images/delete.png" alt="delete account"></img>
+                        <span>Delete account</span>
+                    </div>
+                    {deleteWindow && (
+                        <div class="delete-modal">
+                            <p>Are you sure you want to delete your account?</p>
+                            <button onClick={handleDeleteAccount} className="delete-yes">Yes</button>
+                            <button onClick={closeDeleteWindow} className="delete-no">No</button>
+                        </div>
+                    )};
                     <div className="logout-section" onClick={handleLogout}>
                         <img src="/images/leave.png" alt="log out"></img>
                         <span>Log out</span>

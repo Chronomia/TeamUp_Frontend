@@ -13,6 +13,7 @@ function ExplorePage() {
     const interests = ["Travel", "Food", "Health & Fitness", "Gaming", "Technology & Programming", "Arts & Creativity", "Movies & Entertainment", "Music"];
     const username = location.state.user;
     let [category, setCategory] = useState(location.state?.groupCategory);
+    let [event_status, setEventStatus] = useState(" ");
 
     const [currentPage, setCurrentPage] = useState(1);
     const [currentGroups, setCurrentGroups] = useState([]);
@@ -41,22 +42,6 @@ function ExplorePage() {
             })
     }, [category]);
 
-
-    useEffect(() =>  {
-        let url = 'http://3.134.34.54:8011/api/events'
-        fetch(url, {
-            method: 'GET'
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                setEvents(data);
-            })
-            .catch(error => {
-                console.log('Error fetching groups:', error);
-            })
-    }, [activeTab]);
-
     const slideGroup = (groups)=>{
         const groupsPerPage = 10;
         const indexOfLastGroup = currentPage * groupsPerPage;
@@ -74,6 +59,20 @@ function ExplorePage() {
     const handleCategoryFilter = (interest) => {
         setCategory(interest);
     }
+    useEffect(() =>  {
+        let url = 'http://3.134.34.54:8011/api/events?limit=10000'
+        fetch(url, {
+            method: 'GET'
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                setEvents(data);
+            })
+            .catch(error => {
+                console.log('Error fetching groups:', error);
+            })
+    }, []);
 
     return(
         <div className="explore-page">
