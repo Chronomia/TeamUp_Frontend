@@ -48,7 +48,7 @@ label {
   height: 25px;
 }
 
-select{
+.profile-select{
   padding: 8px;
   height: 45px;
   border: 2px solid #1B4235;
@@ -56,6 +56,7 @@ select{
   background: #F1EBE5;
   margin-bottom: 10px;
 }
+
 .interests-section {
   display: flex;
   flex-wrap: wrap;
@@ -101,7 +102,7 @@ select{
 button {
   padding: 10px;
   margin:10px;
-  width:50%;
+  width: 33%;
   background-color: #2E6D58;
   border: none;
   border-radius: 5px;

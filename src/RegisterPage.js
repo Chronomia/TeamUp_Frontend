@@ -56,7 +56,7 @@ function RegisterPage() {
     }
 
     const interests = [
-        {id: "travel", name: "Travel"},
+        {id: "Travel", name: "Travel"},
         {id: "food", name: "Food"},
         {id: "health", name: "Health & Fitness"},
         {id: "game", name: "Gaming"},
@@ -187,7 +187,7 @@ function RegisterPage() {
                           <label htmlFor="user-age">Age</label>
                       </div>
                       <div className="input-wrapper">
-                          <select id="gender-select" value={gender} onChange={(e) => setGender(e.target.value)}>
+                          <select id="gender-select" className="profile-select" value={gender} onChange={(e) => setGender(e.target.value)}>
                               <option value="">Select Gender</option>
                               <option value="female">Female</option>
                               <option value="male">Male</option>
@@ -199,8 +199,8 @@ function RegisterPage() {
                   <div className="interests-section">
                       {interests.map(interest => (
                           <div
-                            key={interest.id}
-                            className={`interest-item ${selectedInterests.includes(interest.id) ? 'selected' : ''}`}
+                            key={interest.name}
+                            className={`interest-item ${selectedInterests.includes(interest.name) ? 'selected' : ''}`}
                             onClick={() => toggleInterest(interest.name)}
                           >
                             <img src={`/images/${interest.id}.png`} alt={interest.name} className={'interests-icon'}/>

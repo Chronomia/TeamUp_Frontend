@@ -1,20 +1,46 @@
 import React, {useEffect, useRef, useState} from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import "./HomePage.css";
 function HomePage() {
     const navigate = useNavigate();
 
-    const firstName = 'Jane';
-    const lastName = 'Doe';
-    const interests = ["Travel", "Food", "Gaming"];
-    const gender = "Female";
-    const email = "zz2983@columbia.edu";
-    const birth = "11/22/2000";
-    const location = "New Yor, NY";
-    const username = 'zz2983';
-    const phoneNumber = '(123)321-1234';
-    const groups = [];
-    const events = [];
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [interests, setInterests] = useState([]);
+    const [gender, setGender] = useState("");
+    const [email, setEmail] = useState("");
+    const [age, setAge] = useState(1);
+    const [userLocation, setUserLocation] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [id, setId] = useState("");
+    const [displayInterests, setDisplayInterests] = useState([]);
+    let groups = [];
+    let events = [];
+    const location = useLocation();
+    const username = location.state.username;
+
+    useEffect(()=>{
+        fetch(`http://ec2-44-219-26-13.compute-1.amazonaws.com:8000/users/name/${username}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                setFirstName(data.first_name);
+                setLastName(data.last_name);
+                setEmail(data.email);
+                setPhoneNumber(data.contact);
+                setUserLocation(data.location);
+                setInterests(data.interests);
+                setDisplayInterests(data.interests);
+                setAge(data.age);
+                setGender(data.gender);
+                setId(data.id);
+            })
+            .catch(error => {
+                console.error('Error fetching user information:', error);
+            });
+    }, [username]);
+
+
 
     const [activeSection, setActiveSection] = useState('personal');
     const personalRef = useRef(null);
@@ -24,23 +50,23 @@ function HomePage() {
 
 
     useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
+        const observer = new IntersectionObserver((entries) => {
 
-        entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
-        }
+            entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              setActiveSection(entry.target.id);
+            }
+            });
+        }, { rootMargin: '-30% 0px -70% 0px' });
+
+        const sections = [personalRef, groupsRef, eventsRef, exploreRef];
+        sections.forEach(section => {
+            if(section.current) {
+                observer.observe(section.current);
+            }
         });
-    }, { rootMargin: '-30% 0px -70% 0px' });
 
-    const sections = [personalRef, groupsRef, eventsRef, exploreRef];
-    sections.forEach(section => {
-      if(section.current) {
-        observer.observe(section.current);
-      }
-    });
-
-    return () => observer.disconnect();
+        return () => observer.disconnect();
     }, []);
 
     const handleLogout = () => {
@@ -68,9 +94,17 @@ function HomePage() {
     };
 
     const handleSearchGroups = () => {
-        navigate("/explore");
+        navigate("/explore", { state: { user: username,  groupCategory: " "} })
     };
 
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    const openEditWindow= () => {
+        setIsEditOpen(true);
+    };
+
+    const closeEditWindow = () => {
+        setIsEditOpen(false);
+    };
     const [isWindowOpen, setIsWindowOpen] = useState(false);
     const openWindow= () => {
         setIsWindowOpen(true);
@@ -83,8 +117,21 @@ function HomePage() {
     const handleOutside = (e) => {
         if (e.target.id === "outside-window") {
             closeWindow();
+            closeEditWindow();
         }
     };
+
+    const addInterests = (event) => {
+        setInterests([...interests, event]);
+    };
+
+    const removeInterest = (event) => {
+        setInterests(interests.filter((i) => i !== event));
+    };
+
+    const remainInterests = Object.keys(interestToImage).filter((remain) => !interests.includes(remain));
+
+
 
     const [activeTab, setActiveTab] = useState('groups');
 
@@ -151,6 +198,47 @@ function HomePage() {
         setGroupOrganizer(false);
     };
 
+    const handleEditProfile = (event) =>{
+        event.preventDefault();
+        const userData = {
+            "first_name": firstName,
+            "last_name": lastName,
+            "email": email,
+            "contact": phoneNumber,
+            "location": userLocation,
+            "interests": interests,
+            "age": age,
+            "gender": gender,
+            "_id": "string",
+            "friends": [],
+        }
+        fetch( 'http://ec2-44-219-26-13.compute-1.amazonaws.com:8000/users/'+ id + "/profile", {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.detail) {
+                alert(data.detail);
+            }
+            else{
+                console.log('Success:', data);
+                navigate(0);
+            }
+
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    };
+
+    const directToGroups = (interest) => {
+        navigate('/explore', { state: { user: username,  groupCategory: interest} })
+    }
+
 
     return(
         <div className="home-page">
@@ -185,18 +273,18 @@ function HomePage() {
                                 </div>
                                 <div className="detail-box">
                                     <img src={`/images/cake.png`} alt={"birth-date"}></img>
-                                    <p>{birth}</p>
+                                    <p>{age}</p>
                                 </div>
                                 <div className="detail-box">
                                     <img src={`/images/location.png`} alt={"city-state"}></img>
-                                    <p>{location}</p>
+                                    <p>{userLocation}</p>
                                 </div>
                             </div>
                             <div className="right-content">
                                 <div className="top-right-content">
                                     <h3>Your Interests</h3>
                                     <div className="interest-section">
-                                        {interests.map(interest => (
+                                        {displayInterests.map(interest => (
                                             <div key={interest} className={"interests-item"}>
                                             <img src={`/images/${getImageFilename(interest)}`} className={"interest-icon"} alt={interest} />
                                             <span>{interest}</span>
@@ -204,7 +292,132 @@ function HomePage() {
                                             ))}
                                     </div>
                                 </div>
-                                <button className="edit-profile-button">Edit Profile</button>
+                                <button className="edit-profile-button" onClick={openEditWindow}>Edit Profile</button>
+                                {isEditOpen && (
+                                    <div id="outside-window" className="outside-window" onClick={handleOutside}>
+                                        <div className="edit-content">
+                                            <span className="close-icon" onClick={closeEditWindow}>&times;</span>
+                                            <h2>Edit Profile</h2>
+                                            <form>
+                                                <h3 className="input-header">Name</h3>
+                                                <div className="form-section">
+                                                    <div className="input-section">
+                                                        <input
+                                                            id="first-name"
+                                                            type="text"
+                                                            className="edit-input"
+                                                            value={firstName}
+                                                            onChange={(e) => setFirstName(e.target.value)}
+                                                            required
+                                                        />
+                                                        <label htmlFor="first-name" className="input-label">First Name</label>
+                                                    </div>
+                                                    <div className="input-section">
+                                                        <input
+                                                            id="last-name"
+                                                            type="text"
+                                                            className="edit-input"
+                                                            value={lastName}
+                                                            onChange={(e) => setLastName(e.target.value)}
+                                                            required
+                                                        />
+                                                        <label htmlFor="last-name" className="input-label">Last Name</label>
+                                                    </div>
+                                                </div>
+                                                <h3 className="input-header">Contact Information</h3>
+                                                <div className="form-section">
+                                                    <div className="input-section">
+                                                        <input
+                                                            id="email-address"
+                                                            type="email"
+                                                            className="edit-input"
+                                                            value={email}
+                                                            onChange={(e) => setEmail(e.target.value)}
+                                                            required
+                                                        />
+                                                        <label htmlFor="email-address" className="input-label">Email</label>
+                                                    </div>
+                                                    <div className="input-section">
+                                                        <input
+                                                            id="contact-number"
+                                                            type="tel"
+                                                            className="edit-input"
+                                                            value={phoneNumber}
+                                                            onChange={(e) => setPhoneNumber(e.target.value)}
+                                                            required
+                                                        />
+                                                        <label htmlFor="contact-number" className="input-label">Phone Number</label>
+                                                    </div>
+                                                </div>
+                                                <h3 className="input-header">Location</h3>
+                                                <div className="form-section">
+                                                    <div className="input-section">
+                                                        <input
+                                                            id="city-state"
+                                                            type="text"
+                                                            className="edit-input"
+                                                            value={userLocation}
+                                                            onChange={(e) => setUserLocation(e.target.value)}
+                                                            required
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="form-section">
+                                                    <div className="input-section">
+                                                        <input
+                                                            id="user-age"
+                                                            type="number"
+                                                            min="1"
+                                                            max="150"
+                                                            className="edit-input"
+                                                            value={age}
+                                                            onChange={(e) => setAge(e.target.value)}
+                                                            required
+                                                        />
+                                                        <label htmlFor="user-age" className="input-label">Age</label>
+                                                    </div>
+                                                    <div className="input-section">
+                                                        <select id="gender-select" className="edit-select" value={gender} onChange={(e) => setGender(e.target.value)}>
+                                                            <option value="">Select Gender</option>
+                                                            <option value="female">Female</option>
+                                                            <option value="male">Male</option>
+                                                        </select>
+                                                        <label htmlFor="gen-der" className="input-label">Gender</label>
+                                                    </div>
+                                                </div>
+                                                <div className="edit-interests-container">
+                                                    <h3 className="input-header">Your interests</h3>
+                                                    <div className="current-interests">
+                                                        {interests.map((interest) => (
+                                                            <div key={interest}>
+                                                                <button className="interest-tag" onClick={() => removeInterest(interest)}>
+                                                                    {interest}<img src="/images/remove.png" alt="Remove" className="remove-interest" />
+                                                                </button>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                    <h3 className="input-header">Add more interests</h3>
+                                                    <div className="current-interests">
+                                                        {remainInterests.map((interest) => (
+                                                            <div key={interest} >
+                                                                <button className="remain-interest" onClick={() => addInterests(interest)}>
+                                                                    {interest}<img src="/images/add.png" alt="Add" className="remove-interest" />
+                                                                </button>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+
+                                                </div>
+                                                <div className="button-container">
+                                                    <button className="edit-button" type="submit" onClick={handleEditProfile}>Complete</button>
+                                                    <button className="edit-button" onClick={closeEditWindow}>Back</button>
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                   </div>
+                                    )
+                                }
                             </div>
                         </div>
                     </div>
@@ -260,7 +473,7 @@ function HomePage() {
                         <h2 className="section-title">Explore all interests</h2>
                         <div className="interests-section">
                             {Object.entries(interestToImage).map(([interest, imageName]) => (
-                              <div className="interest-item" key={interest}>
+                              <div className="interest-item" key={interest} onClick={() => directToGroups(interest)}>
                                 <img src={`/images/${imageName}`} className="explore-interest" alt={interest} />
                                 <p>{interest}</p>
                               </div>

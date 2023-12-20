@@ -25,7 +25,7 @@ function LoginPage() {
 			.then(response => response.json())
 			.then(data => {
 				if (data.detail) {
-                alert(data.detail);
+                	alert(data.detail);
             	}
 				else{
 					console.log('Success:', data);
@@ -71,7 +71,6 @@ function LoginPage() {
 					</div>
 					<button className="login-button" type="submit">Sign In</button>
 				</form>
-				<a className="loginLink" href="/forgot-password">Forget Password</a>
 				<div className="register-link">
 					Not a member yet? <Link className="loginLink" to="/register">Register now</Link>
 				</div>

@@ -9,13 +9,13 @@
 }
 
 .explore-container{
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.9);
     border-radius: 8px;
     text-align: center;
     width: 95%;
     height: 95%;
     display: flex;
-    overflow-y: hidden;
+    overflow-y: auto;
 }
 
 .home-button {
@@ -60,3 +60,87 @@
     margin: 40px;
 }
 
+.group-filter-section{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 3%;
+}
+
+.group-filter{
+    background:#C3CAD6;
+    height:35px;
+    border-radius: 25px;
+    border:none;
+    padding: 10px;
+    left: 0;
+}
+
+.group-card{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 5%;
+    padding-bottom: 10px;
+    border-bottom: 2px solid lightgrey;
+    width: 70%;
+    margin-left: 10%;
+    cursor: pointer;
+}
+
+.group-card-left{
+    width: 40%;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.group-card-image{
+    width: 85%;
+    height: 60%;
+    border-radius: 20px;
+    margin-left: 5%;
+}
+
+.group-card-right{
+    text-align: left;
+}
+
+.group-card-title{
+    color: #181007;
+}
+
+.group-card-location{
+    color: #1B4235;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.group-card-intro{
+    color: #391B0B;
+    margin-left: 10px;
+}
+
+.pagination{
+    margin-left: 10%;
+    width: 70%;
+    padding: 10px;
+    display: flex;
+    justify-content: center
+}
+
+.page-text{
+    font-weight: bold;
+}
+
+.pageNumber{
+    border-radius: 15px;
+    width: 100px;
+    border: 1px solid #391B0B;
+    background: transparent;
+    color: #391B0B;
+    margin: 10px;
+}
+
+.pageNumber:hover{
+    background: transparent;
+}
