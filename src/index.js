@@ -6,6 +6,8 @@ import RegisterPage from './RegisterPage';
 import ForgotPage from './ForgotPage';
 import HomePage from './HomePage';
 import ExplorePage from "./ExplorePage";
+import GroupPage from "./GroupPage";
+import EventPage from "./EventPage";
 import './index.css';
 
 const rootElement = document.getElementById('root');
@@ -20,6 +22,8 @@ root.render(
             <Route path="/forgot-password" element={<ForgotPage />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/explore" element={<ExplorePage />} />
+            <Route path="/group" element={<GroupPage />} />
+            <Route path="/event" element={<EventPage />} />
             <Route path="/" element={<Navigate to="/login" />} />
         </Routes>
     </Router>

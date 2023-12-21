@@ -138,7 +138,8 @@ function HomePage() {
 
 
     const [group_name, setGroupName] = useState("");
-    const [group_location, setGroupLocation] = useState("");
+    const [group_city, setGroupCity] = useState("");
+    const [group_state, setGroupState] = useState("");
     const [group_interests, setGroupInterests] = useState("");
     const [group_intro, setGroupIntro] = useState("");
     const [group_policy, setGroupPolicy] = useState("");
@@ -149,8 +150,9 @@ function HomePage() {
         const group_data ={
             "group_id": uuidv4(),
             "group_name": group_name,
-            "founder": "/users/name/" + `${username}`,
-            "location": group_location,
+            "founder": `/users/name/${username}`,
+            "city": group_city,
+            "state": group_state,
             "category": group_interests,
             "intro": group_intro,
             "policy": group_policy
@@ -182,13 +184,12 @@ function HomePage() {
 
     const clearForm = () => {
         setGroupName("");
-        setGroupLocation("");
+        setGroupCity("");
+        setGroupState("")
         setGroupInterests("");
         setGroupIntro("");
         setGroupPolicy("");
     };
-
-
 
     const [event_name, setEventName] = useState("");
     const [event_capacity, setEventCapacity] = useState(1);
@@ -197,7 +198,6 @@ function HomePage() {
     const [event_time, setEventTime] = useState("");
     const [event_duration, setEventDuration] = useState(15);
     const [event_category, setEventCategory] = useState("");
-    const [event_form, setEventForm] = useState("");
     const [event_group, setEventGroup] = useState("");
     const [event_tag2, setEventTag] = useState("");
 
@@ -602,16 +602,18 @@ function HomePage() {
                     <div ref={eventsRef} id="events" className="section">
                         <div className="events-section">
                             <h2 className="section-title">Your Events ({events_own.length})</h2>
-                            {events_own.length > 0 ? (
-                                    events_own.map((event) => (
-                                        <div className="ownGroups-container" key={event.group_id}>
-                                            <img src="/images/group_icon.jpg" alt={event.group_name}></img>
-                                            <div className="group-found-text">{event.group_name}</div>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <p>You haven't organized any events. To organize an event, you must be a founder of any group.</p>
-                            )}
+                            <div className="your-groups-container">
+                                {events_own.length > 0 ? (
+                                        events_own.map((event) => (
+                                            <div className="ownGroups-container" key={event.event_id}>
+                                                <img src="/images/event-icon.jpg" alt={event.event_name}></img>
+                                                <div className="group-found-text">{event.event_name}</div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <p>You haven't organized any events. To organize an event, you must be a founder of any group.</p>
+                                )}
+                            </div>
                         </div>
                         <div className="events-section">
                             <h2 className="section-title">Attendees - Joined Events ({groups.length})</h2>
@@ -692,13 +694,23 @@ function HomePage() {
                                                 <div className="create-form-container">
                                                     <div className="create-new-wrapper">
                                                         <input
-                                                            id="group-location"
+                                                            id="group-city"
                                                             type="text"
-                                                            value={group_location}
-                                                            onChange={(e) => setGroupLocation(e.target.value)}
+                                                            value={group_city}
+                                                            onChange={(e) => setGroupCity(e.target.value)}
                                                             required
                                                         />
-                                                        <label htmlFor="email-address">Location</label>
+                                                        <label htmlFor="group-city">City</label>
+                                                    </div>
+                                                    <div className="create-new-wrapper">
+                                                        <input
+                                                            id="group-state"
+                                                            type="text"
+                                                            value={group_state}
+                                                            onChange={(e) => setGroupState(e.target.value)}
+                                                            required
+                                                        />
+                                                        <label htmlFor="group-state">State</label>
                                                     </div>
                                                 </div>
                                                 <div className="create-form-container">

@@ -1,0 +1,18 @@
+.event-page{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-image: url('/public/images/group.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.event-container{
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    text-align: center;
+    width: 95%;
+    height: 95%;
+    overflow-y: auto;
+}

@@ -13,10 +13,12 @@ function ExplorePage() {
     const interests = ["Travel", "Food", "Health & Fitness", "Gaming", "Technology & Programming", "Arts & Creativity", "Movies & Entertainment", "Music"];
     const username = location.state.user;
     let [category, setCategory] = useState(location.state?.groupCategory);
-    let [event_status, setEventStatus] = useState(" ");
 
     const [currentPage, setCurrentPage] = useState(1);
     const [currentGroups, setCurrentGroups] = useState([]);
+
+    const [currentEventPage, setCurrentEventPage] = useState(1);
+    const [currentEvents, setCurrentEvents] = useState([]);
 
     const handleBackToHome = () => navigate('/home', { state: { username: username } });
 
@@ -33,7 +35,6 @@ function ExplorePage() {
             .then(response => response.json())
             .then(data => {
                 setCurrentPage(1);
-                console.log(data);
                 slideGroup(data)
                 setGroups(data);
             })
@@ -58,7 +59,8 @@ function ExplorePage() {
         }
     const handleCategoryFilter = (interest) => {
         setCategory(interest);
-    }
+    };
+
     useEffect(() =>  {
         let url = 'http://3.134.34.54:8011/api/events?limit=10000'
         fetch(url, {
@@ -66,13 +68,37 @@ function ExplorePage() {
         })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
+                setCurrentPage(1);
                 setEvents(data);
+                sliceEvent(data)
             })
             .catch(error => {
-                console.log('Error fetching groups:', error);
+                console.log('Error fetching events:', error);
             })
     }, []);
+
+    const sliceEvent= (events)=>{
+        const eventsPerPage = 10;
+        const indexOfLastEvent = currentPage * eventsPerPage;
+        const indexOfFirstEvents = indexOfLastEvent - eventsPerPage;
+        setCurrentEvents(events.slice(indexOfFirstEvents, indexOfLastEvent));
+    };
+    const paginateEvent = (pageNumber) => {
+        setCurrentEventPage(pageNumber);
+        sliceEvent(events);
+    }
+    const eventNumbers = [];
+    for (let i = 1; i <= Math.ceil(events.length / 10); i++) {
+        eventNumbers.push(i);
+    }
+
+    const toGroupPage = (group_id) => {
+        navigate('/group', { state: { username: username, group_id: group_id } })
+    }
+    const toEventPage = (event_id) => {
+        navigate('/event', { state: { username: username, event_id: event_id } })
+    }
+
 
     return(
         <div className="explore-page">
@@ -87,20 +113,29 @@ function ExplorePage() {
                     </div>
                     {activeTab === 'events' && (
                         <div className="detail-content">
-                            <p>All events will be listed here...</p>
-                            {events.map(event => (
-                                <div className="group-card" >
+                            {currentEvents.map(event => (
+                                <div className="group-card"  onClick={() => toEventPage(event.event_id)}>
                                     <div className="group-card-left">
                                         <img src="/images/group_icon.jpg" className="group-card-image" alt={event.event_name}></img>
                                     </div>
                                     <div className="group-card-right">
                                         <h1 className="group-card-title">{event.event_name}</h1>
-                                        <p className="group-card-location">Location: {event.capacity}</p>
+                                        <p className="group-card-location">Location: {event.location}</p>
+                                        <p className="group-card-location">Description: {event.description}</p>
                                         <p className="group-card-intro">{event.status}</p>
-                                        <p className="group-card-intro"> 10 members</p>
                                     </div>
                                 </div>
                             ))}
+                            <div className='pagination'>
+                                <button onClick={() => paginateEvent(currentEventPage - 1)} className="pageNumber" disabled={currentEventPage === 1}>
+                                    &lt; Previous
+                                </button>
+                                <p className="page-text">{currentEventPage}</p>
+                                <button
+                                    onClick={()=>paginateEvent(currentEventPage + 1)} className="pageNumber" disabled={currentEventPage === eventNumbers.length}>
+                                    Next &gt;
+                                  </button>
+                            </div>
                         </div>
                     )}
                     {activeTab === 'groups' && (
@@ -120,15 +155,14 @@ function ExplorePage() {
                                 </select>
                             </div>
                             {currentGroups.map(group => (
-                                <div className="group-card" key={group.id}>
+                                <div className="group-card" key={group.id} onClick={() => toGroupPage(group.group_id)}>
                                     <div className="group-card-left">
                                         <img src="/images/group_icon.jpg" className="group-card-image" alt={group.group_name}></img>
                                     </div>
                                     <div className="group-card-right">
                                         <h1 className="group-card-title">{group.group_name}</h1>
-                                        <p className="group-card-location">Location: {group.location}</p>
+                                        <p className="group-card-location">Location: {group.city}, {group.state}</p>
                                         <p className="group-card-intro">{group.intro}</p>
-                                        <p className="group-card-intro"> 10 members</p>
                                     </div>
                                 </div>
                             ))}

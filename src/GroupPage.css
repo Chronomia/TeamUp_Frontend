@@ -1,0 +1,140 @@
+.group-page{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-image: url('/public/images/group.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.group-container{
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    text-align: center;
+    width: 95%;
+    height: 95%;
+    overflow-y: auto;
+}
+
+.upper-group-container{
+    height: 50%;
+    width: 100%;
+    display: flex;
+    border-bottom: 2px solid lightgrey;
+}
+
+.upper-left-container{
+    width: 50%;
+}
+
+.upper-left-container img{
+    width: 100%;
+    margin: 2%;
+    height: 90%;
+    border-radius: 10px;
+}
+
+.upper-right-container{
+    width: 50%;
+    text-align: left;
+    margin-left: 25px;
+}
+
+.upper-right-container h1{
+    font-size: xxx-large;
+}
+
+.event-info{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.event-info img{
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+.event-info p{
+    font-size: larger;
+}
+
+.lower-group-container{
+    height: 50%;
+    width: 100%;
+    overflow-y: auto;
+}
+
+.group-detail-navigator{
+    display: flex;
+    justify-content: flex-start;
+
+}
+
+.group-detail-navigator .active {
+    text-decoration: none;
+    background: transparent;
+    padding: 10px;
+    color: #184234;
+    font-weight: bold;
+    cursor: pointer;
+    width: 10%;
+}
+
+.group-detail-navigator .inactive {
+    text-decoration: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 10px;
+    border: none;
+    color: #184234;
+    width: 10%;
+}
+
+.group-text-details{
+    text-align: left;
+    margin-left: 5%;
+}
+
+.group-events-details{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.organizer-options{
+    width: 50%;
+    display: flex;
+}
+
+.organizer-options button{
+    width: 70%;
+    margin-left: 5%;
+    background: #7c7575;
+}
+
+.outside-Edit {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.window-content {
+    height: 70%;
+    width: 55%;
+    padding: 20px;
+    background-color: whitesmoke;
+    border-radius: 10px;
+    position: relative;
+    z-index: 1001;
+    overflow-y: auto;
+}
