@@ -42,6 +42,28 @@ function LoginPage() {
 		setShowPassword(!showPassword);
 	};
 
+	const checkStatus = () => {
+		const statusPromises = [
+			fetch('http://3.19.41.237:8001/check/event-service', {method: 'GET'})
+				.then(response => response.json())
+				.then(data => `Event Microservice: ${data['service status']}`)
+				.catch((error) => {console.error('Error:', error);}),
+			fetch('http://3.19.41.237:8001/check/group-service', {method: 'GET'})
+				.then(response => response.json())
+				.then(data => `Group Microservice: ${data['service status']}`)
+				.catch((error) => {console.error('Error:', error);}),
+			fetch('http://3.19.41.237:8001/check/user-service', {method: 'GET'})
+				.then(response => response.json())
+				.then(data => `User Microservice: ${data['service status']}`)
+				.catch((error) => {console.error('Error:', error);})
+		];
+
+		Promise.all(statusPromises).then((results) => {
+			const statusMessage = results.join('\n');
+        	alert(statusMessage);
+		});
+	}
+
 	return (
 		<div className="login-page">
 			<div className="login-form-container">
@@ -74,6 +96,7 @@ function LoginPage() {
 				<div className="register-link">
 					Not a member yet? <Link className="loginLink" to="/register">Register now</Link>
 				</div>
+				<button className="checkStatus"onClick={checkStatus}>check microservices status</button>
 			</div>
 		</div>
 	);

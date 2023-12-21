@@ -65,3 +65,15 @@
   right: -10px;
   cursor: pointer;
 }
+
+.checkStatus{
+  background: rgba(207, 130, 130, 0.5);
+  color: black;
+  width: auto;
+  margin-top: 20px;
+  border-radius: 20px;
+}
+
+.checkStatus:hover{
+  background: rgba(207, 130, 130, 0.5);
+}
