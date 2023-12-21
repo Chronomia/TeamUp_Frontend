@@ -7,8 +7,8 @@ function GroupPage() {
     const navigate = useNavigate();
 
     const location = useLocation();
-    const [username, setUsername] = useState(location.state.username);
-    const [groupID, setGroupID] = useState(location.state.group_id);
+    const username = useState(location.state.username);
+    const groupID = useState(location.state.group_id);
     const [groupName, setGroupName] = useState("");
     const [groupFounder, setGroupFounder] = useState("jsumshon7");
     const [groupCity, setGroupCity] = useState("");

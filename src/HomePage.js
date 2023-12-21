@@ -17,8 +17,8 @@ function HomePage() {
     const [id, setId] = useState("");
     const [displayInterests, setDisplayInterests] = useState([]);
     const [groups_own, setGroupsOwn] = useState([]);
-    let groups = [];
-    let events = [];
+    const [joinedGroup, setJoinedGroup] = useState([]);
+    const [joinedEvent, setJoinedEvent] = useState([]);
     const location = useLocation();
     const [username, setUsername] = useState(location.state?.username);
 
@@ -368,6 +368,70 @@ function HomePage() {
                 });
         }
     }, [username]);
+
+    useEffect(()=>{
+        if(username){
+            fetch(`http://3.134.34.54:8011/api/users/${username}/events`, {
+                method: 'GET'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    setJoinedEvent(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching joined events:', error);
+                });
+        }
+    }, [username]);
+
+    useEffect(()=>{
+        if(username){
+            fetch(  `https://coms6156-f23-sixguys.ue.r.appspot.com/group_member_rel/user/${username}`, {
+                method: 'GET'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const modifiedGroups = clean(data);
+                    getGroupwithDetails(modifiedGroups);
+                })
+                .catch(error => {
+                    console.error('Error fetching user information:', error);
+                });
+        }
+    }, [username]);
+
+    const getGroupwithDetails = (modified) => {
+        fetch(`https://coms6156-f23-sixguys.ue.r.appspot.com/groups?page=1&page_size=1100`, {
+                    method: 'GET'
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        const groupIds = modified.map(group => group.group_id);
+                        const groups = data.filter(exitGroup => groupIds.includes(exitGroup.group_id));
+                        setJoinedGroup(groups);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching user information:', error);
+                    });
+    }
+
+    const clean = (data) => {
+        const modifiedGroups = data.map(group => {
+          return {
+            ...group,
+            group_id: group.group_id.split('/')[2]
+          };
+        });
+        return modifiedGroups
+    }
+
+    const toGroupPage = (group_id) => {
+        navigate('/group', { state: { username: username, group_id: group_id } })
+    }
+    const toEventPage = (event_id) => {
+        navigate('/event', { state: { username: username, event_id: event_id } })
+    }
+
     return(
         <div className="home-page">
             <div className="user-container">
@@ -567,8 +631,8 @@ function HomePage() {
                                 {groups_own.length > 0 ? (
                                     groups_own.map((group) => (
                                         <div className="ownGroups-container" key={group.group_id}>
-                                            <img src="/images/group_icon.jpg" alt={group.group_name}></img>
-                                            <div className="group-found-text">{group.group_name}</div>
+                                            <img src="/images/group_icon.jpg" alt={group.group_name} onClick={() => toGroupPage(group.group_id)}></img>
+                                            <div className="group-found-text" onClick={() => toGroupPage(group.group_id)}>{group.group_name}</div>
                                         </div>
                                     ))
                                 ) : (
@@ -576,14 +640,20 @@ function HomePage() {
                                 )}
                             </div>
 
-                            <h2 className="section-title">Member - Joined Groups ({groups.length})</h2>
-                            {groups.length > 0 ? (
-                                groups.map((group) => (
-                                    <div key={group.id}>{group.name}</div>
-                                ))
-                            ) : (
-                                <p>You haven't joined any groups.</p>
-                            )}
+                            <h2 className="section-title">Member - Joined Groups ({joinedGroup.length})</h2>
+                            <div className="your-groups-container">
+                                {joinedGroup.length > 0 ? (
+                                    joinedGroup.map((group) => (
+                                        <div className="ownGroups-container" key={group.group_id}>
+                                                <img src="/images/event-icon.jpg" alt={group.group_id} onClick={() => toGroupPage(group.group_id)}></img>
+                                                <div className="group-found-text" onClick={() => toGroupPage(group.group_id)}>{group.group_name}</div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p>You haven't joined any groups.</p>
+                                )}
+                            </div>
+
                             <div className="search-more-container" onClick={handleSearchGroups}>
                                 <div className="left-search">
                                     <button className="search-button">
@@ -606,8 +676,8 @@ function HomePage() {
                                 {events_own.length > 0 ? (
                                         events_own.map((event) => (
                                             <div className="ownGroups-container" key={event.event_id}>
-                                                <img src="/images/event-icon.jpg" alt={event.event_name}></img>
-                                                <div className="group-found-text">{event.event_name}</div>
+                                                <img src="/images/event-icon.jpg" alt={event.event_name} onClick={() => toEventPage(event.event_id)}></img>
+                                                <div className="group-found-text" onClick={() => toEventPage(event.event_id)}>{event.event_name}</div>
                                             </div>
                                         ))
                                     ) : (
@@ -616,14 +686,19 @@ function HomePage() {
                             </div>
                         </div>
                         <div className="events-section">
-                            <h2 className="section-title">Attendees - Joined Events ({groups.length})</h2>
-                            {events.length > 0 ? (
-                                events.map((event) => (
-                                    <div key={event.id}>{event.name}</div>
-                                ))
-                            ) : (
-                                <p>You haven't participated any events.</p>
-                            )}
+                            <h2 className="section-title">Attendees - Joined Events ({joinedEvent.length})</h2>
+                            <div className="your-groups-container">
+                                {joinedEvent.length > 0 ? (
+                                    joinedEvent.map((event) => (
+                                        <div className="ownGroups-container" key={event.event_id}>
+                                                <img src="/images/event-icon.jpg" alt={event.event_name} onClick={() => toEventPage(event.event_id)}></img>
+                                                <div className="group-found-text" onClick={() => toEventPage(event.event_id)}>{event.event_name}</div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p>You haven't joined any groups.</p>
+                                )}
+                            </div>
                         </div>
                         <div className="search-more-container" onClick={handleSearchGroups}>
                             <div className="left-search">
