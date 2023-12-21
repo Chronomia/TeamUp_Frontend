@@ -1,9 +1,11 @@
 import React, {useEffect, useRef, useState} from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
 import "./HomePage.css";
+import {v4 as uuidv4} from "uuid";
 function HomePage() {
     const navigate = useNavigate();
 
+    const { v4: uuidv4 } = require('uuid');
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [interests, setInterests] = useState([]);
@@ -14,10 +16,11 @@ function HomePage() {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [id, setId] = useState("");
     const [displayInterests, setDisplayInterests] = useState([]);
+    const [groups_own, setGroupsOwn] = useState([]);
     let groups = [];
     let events = [];
     const location = useLocation();
-    const username = location.state.username;
+    const [username, setUsername] = useState(location.state?.username);
 
     useEffect(()=>{
         fetch(`http://ec2-44-219-26-13.compute-1.amazonaws.com:8000/users/name/${username}`)
@@ -34,6 +37,7 @@ function HomePage() {
                 setAge(data.age);
                 setGender(data.gender);
                 setId(data.id);
+                setUsername(data.username);
             })
             .catch(error => {
                 console.error('Error fetching user information:', error);
@@ -105,19 +109,20 @@ function HomePage() {
     const closeEditWindow = () => {
         setIsEditOpen(false);
     };
-    const [isWindowOpen, setIsWindowOpen] = useState(false);
-    const openWindow= () => {
-        setIsWindowOpen(true);
+    const [isGroupWindowOpen, setIsGroupWindowOpen] = useState(false);
+    const openGroupWindow= () => {
+        setIsGroupWindowOpen(true);
     };
 
-    const closeWindow = () => {
-        setIsWindowOpen(false);
+    const closeGroupWindow = () => {
+        setIsGroupWindowOpen(false);
     };
 
     const handleOutside = (e) => {
         if (e.target.id === "outside-window") {
-            closeWindow();
+            closeGroupWindow();
             closeEditWindow();
+            closeEventWindow()
         }
     };
 
@@ -132,17 +137,46 @@ function HomePage() {
     const remainInterests = Object.keys(interestToImage).filter((remain) => !interests.includes(remain));
 
 
-
-    const [activeTab, setActiveTab] = useState('groups');
-
     const [group_name, setGroupName] = useState("");
     const [group_location, setGroupLocation] = useState("");
     const [group_interests, setGroupInterests] = useState("");
     const [group_intro, setGroupIntro] = useState("");
     const [group_policy, setGroupPolicy] = useState("");
+    const [events_own, setEventOwn] = useState([]);
 
-    const handleCreate = (event) => {
+    const handleCreateGroup = (event) => {
         event.preventDefault();
+        const group_data ={
+            "group_id": uuidv4(),
+            "group_name": group_name,
+            "founder": "/users/name/" + `${username}`,
+            "location": group_location,
+            "category": group_interests,
+            "intro": group_intro,
+            "policy": group_policy
+        };
+        fetch('https://coms6156-f23-sixguys.ue.r.appspot.com/groups/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(group_data)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.detail) {
+                    alert(data.detail);
+                }
+            else{
+                alert(`Group created successfully!.`);
+                setGroupsOwn([...groups_own, group_data]);
+                clearForm();
+                closeGroupWindow();
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
 
     }
 
@@ -154,12 +188,7 @@ function HomePage() {
         setGroupPolicy("");
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
 
-    }
-
-    const mock_group = ["Group1", "Group2", "Group3"]
 
     const [event_name, setEventName] = useState("");
     const [event_capacity, setEventCapacity] = useState(1);
@@ -169,16 +198,19 @@ function HomePage() {
     const [event_duration, setEventDuration] = useState(15);
     const [event_category, setEventCategory] = useState("");
     const [event_form, setEventForm] = useState("");
-    const [setEventOrganizer] = useState("");
     const [event_group, setEventGroup] = useState("");
+    const [event_tag2, setEventTag] = useState("");
 
     const [isGroupOrganizer, setGroupOrganizer] = useState(false);
+    const [isEventWindowOpen, setIsEventWindowOpen] = useState(false);
 
-    const handleCheckUser = (e) => {
-        setGroupOrganizer(true);
-        setEventOrganizer(e.target.value);
-    };
+    const openEventWindow = () => {
+        setIsEventWindowOpen(true);
+    }
 
+    const closeEventWindow = () => {
+        setIsEventWindowOpen(false);
+    }
     const handleCapacity = (e) => {
         const value = Math.max(1, Math.min(100, Number(e.target.value)));
         setEventCapacity(value);
@@ -187,15 +219,54 @@ function HomePage() {
 
     const clearEventForm = () => {
         setEventName("");
-        setEventCapacity("");
+        setEventCapacity(1);
         setEventDescription("");
         setEventLocation("");
         setEventTime("");
-        setEventDuration("");
+        setEventDuration(15);
         setEventCategory("");
-        setEventOrganizer("");
         setEventGroup("");
-        setGroupOrganizer(false);
+        setEventTag("");
+    };
+
+    const handleCreateEvent = (event) => {
+        event.preventDefault();
+        const event_data = {
+            "event_id": uuidv4(),
+            "status": "In Progress",
+            "capacity": event_capacity,
+            "event_name": event_name,
+            "description": event_description,
+            "location": event_location,
+            "time": event_time,
+            "group_id": event_group,
+            "organizer_id": username,
+            "tag_1": event_category,
+            "tag_2": event_tag2,
+            "duration": event_duration
+        }
+        fetch(`http://3.134.34.54:8011/api/${event_group}/events?user_id=${username}`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(event_data)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.detail) {
+                    alert(data.detail);
+                }
+                else{
+                    alert(`Event created successfully!.`);
+                    setEventOwn([...events_own, event_data])
+                    clearEventForm();
+                    closeEventWindow();
+                }
+            })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
     };
 
     const handleEditProfile = (event) =>{
@@ -219,17 +290,17 @@ function HomePage() {
             },
             body: JSON.stringify(userData)
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.detail) {
-                alert(data.detail);
-            }
-            else{
-                console.log('Success:', data);
-                navigate(0);
-            }
+            .then(response => response.json())
+            .then(data => {
+                if (data.detail) {
+                    alert(data.detail);
+                }
+                else{
+                    console.log('Success:', data);
+                    navigate(0);
+                }
 
-        })
+            })
         .catch((error) => {
             console.error('Error:', error);
         });
@@ -261,6 +332,42 @@ function HomePage() {
         navigate('/login');
     }
 
+    useEffect(()=>{
+        if(username){
+            fetch(`https://coms6156-f23-sixguys.ue.r.appspot.com/groups?page=1&page_size=1100`, {
+                method: 'GET'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const groups = data.filter(group => group.founder === `/users/name/${username}`);
+                    setGroupsOwn(groups);
+                    if(groups_own){
+                        setGroupOrganizer(true);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching user information:', error);
+                });
+        }
+    }, [username]);
+
+    const event_tags = ["conference", "exhibition", "hackathon", "meetup", "panel discussion", "product launch", "seminar", "training", "webinar", "workshop"];
+
+    useEffect(()=>{
+        if(username){
+            fetch(`http://3.134.34.54:8011/api/events?limit=1000`, {
+                method: 'GET'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const events = data.filter(event => event.organizer_id === username);
+                    setEventOwn(events);
+                })
+                .catch(error => {
+                    console.error('Error fetching user information:', error);
+                });
+        }
+    }, [username]);
     return(
         <div className="home-page">
             <div className="user-container">
@@ -455,7 +562,21 @@ function HomePage() {
                     </div>
                     <div ref={groupsRef} id="groups" className="section">
                         <div className="groups-section">
-                            <h2 className="section-title">Joined groups ({groups.length})</h2>
+                            <h2 className="section-title">Your Groups ({groups_own.length})</h2>
+                            <div className="your-groups-container">
+                                {groups_own.length > 0 ? (
+                                    groups_own.map((group) => (
+                                        <div className="ownGroups-container" key={group.group_id}>
+                                            <img src="/images/group_icon.jpg" alt={group.group_name}></img>
+                                            <div className="group-found-text">{group.group_name}</div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p>You haven't created any groups.</p>
+                                )}
+                            </div>
+
+                            <h2 className="section-title">Member - Joined Groups ({groups.length})</h2>
                             {groups.length > 0 ? (
                                 groups.map((group) => (
                                     <div key={group.id}>{group.name}</div>
@@ -477,15 +598,29 @@ function HomePage() {
                             </div>
                         </div>
                     </div>
+
                     <div ref={eventsRef} id="events" className="section">
                         <div className="events-section">
-                            <h2 className="section-title">Joined Events ({groups.length})</h2>
+                            <h2 className="section-title">Your Events ({events_own.length})</h2>
+                            {events_own.length > 0 ? (
+                                    events_own.map((event) => (
+                                        <div className="ownGroups-container" key={event.group_id}>
+                                            <img src="/images/group_icon.jpg" alt={event.group_name}></img>
+                                            <div className="group-found-text">{event.group_name}</div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p>You haven't organized any events. To organize an event, you must be a founder of any group.</p>
+                            )}
+                        </div>
+                        <div className="events-section">
+                            <h2 className="section-title">Attendees - Joined Events ({groups.length})</h2>
                             {events.length > 0 ? (
                                 events.map((event) => (
                                     <div key={event.id}>{event.name}</div>
                                 ))
                             ) : (
-                                <p>You haven't participate any events.</p>
+                                <p>You haven't participated any events.</p>
                             )}
                         </div>
                         <div className="search-more-container" onClick={handleSearchGroups}>
@@ -512,184 +647,36 @@ function HomePage() {
                             ))}
                         </div>
                         <h2 className="section-title">Create your own groups/events</h2>
-                        <button className="create-button" onClick={openWindow}>
-                            <img src="/images/home-create.png" alt="create" style={{width:"30px", height: "30px", marginTop:"10px;"}}/>
-                            <h3>Create New</h3>
+                        <div className="create-your-own-container">
+                            <button className="create-button" onClick={openGroupWindow}>
+                                <img src="/images/home-create.png" alt="create" style={{width:"20px", height: "20px", margin:"10px;"}}/>
+                                <span style={{color: "#F1EBE5", marginLeft: "10px", fontWeight: "bold"}}>Create a group</span>
+                            </button>
+                            <button className="create-button" onClick={openEventWindow}>
+                                <img src="/images/home-create.png" alt="create" style={{width:"20px", height: "20px", marginTop:"10px;"}}/>
+                                <span style={{color: "#F1EBE5", marginLeft: "10px", fontWeight: "bold"}}>Create an event</span>
                         </button>
-                        {isWindowOpen && (
+                        </div>
+                        {isGroupWindowOpen && (
                             <div id="outside-window" className="outside-window" onClick={handleOutside}>
                                 <div className="window-content">
-                                    <span className="close-icon" onClick={closeWindow}>&times;</span>
-
+                                    <span className="close-icon" onClick={closeGroupWindow}>&times;</span>
                                     <div className="events-groups-container">
-                                    <div className="select-to-view">
-                                        <button className={activeTab === 'groups' ? 'active' : 'inactive'} onClick={() => setActiveTab('groups')}>Group</button>
-                                        <button className={activeTab === 'events' ? 'active' : 'inactive'} onClick={() => setActiveTab('events')}>Event</button>
-                                    </div>
-                                    {activeTab === 'events' && (
-                                        <div className="create-new-container">
-                                            <div>
-                                                <h3>Please enter your username below</h3>
-                                                <input
-                                                    id="event-username"
-                                                    type="text"
-                                                    value={group_name}
-                                                    onChange={(e) => setGroupName(e.target.value)}
-                                                    required
-                                                />
-                                                <button onClick={handleCheckUser}>Check</button>
-                                            </div>
-                                            <h3 style={{color: "#1B4235", textAlign: "left", marginLeft:"5%"}}>Please complete all questions.</h3>
-                                            <form onSubmit={handleCreate}>
-                                                <div className="create-form-container">
-                                                    <div className="create-new-wrapper">
-                                                        <select
-                                                            id="group-select"
-                                                            value={event_group}
-                                                            onChange={(e) => setEventGroup(e.target.value)}
-                                                            disabled={!isGroupOrganizer}
-                                                            required
-                                                        >
-                                                            {mock_group.map((group, index) => (
-                                                                <option key={index} value={group}>
-                                                                    {group}
-                                                                </option>
-                                                            ))}
-                                                    </select>
-                                                        <label htmlFor="event-group">Group</label>
-                                                    </div>
-                                                </div>
-                                                <div className="create-form-container">
-                                                    <div className="create-new-wrapper">
-                                                        <input
-                                                            id="event-name"
-                                                            type="text"
-                                                            value={event_name}
-                                                            onChange={(e) => setEventName(e.target.value)}
-                                                            disabled={!isGroupOrganizer}
-                                                            required
-                                                        />
-                                                        <label htmlFor="event-name">Name</label>
-                                                    </div>
-                                                </div>
-                                                <div className="create-form-container">
-                                                    <div className="create-new-wrapper">
-                                                        <input
-                                                            id="event-capacity"
-                                                            type="number"
-                                                            className="input-number"
-                                                            min="1"
-                                                            max="100"
-                                                            value={event_capacity}
-                                                            onChange={handleCapacity}
-                                                            disabled={!isGroupOrganizer}
-                                                            required
-                                                        />
-                                                        <label htmlFor="event-capacity">Capacity</label>
-                                                    </div>
-                                                </div>
-                                                <div className="create-form-container">
-                                                    <div className="create-new-wrapper">
-                                                        <input
-                                                            id="event-location"
-                                                            type="text"
-                                                            value={event_location}
-                                                            onChange={(e) => setEventLocation(e.target.value)}
-                                                            disabled={!isGroupOrganizer}
-                                                            required
-                                                        />
-                                                        <label htmlFor="event-location">Location</label>
-                                                    </div>
-                                                </div>
-                                                <div className="create-form-container">
-                                                    <div className="create-new-wrapper">
-                                                        <input
-                                                            id="event-time"
-                                                            type="datetime-local"
-                                                            className="input-number"
-                                                            value={event_time}
-                                                            onChange={(e) => setEventTime(e.target.value)}
-                                                            disabled={!isGroupOrganizer}
-                                                            required
-                                                        />
-                                                        <label htmlFor="event-time">Time</label>
-                                                    </div>
-                                                </div>
-                                                <div className="create-form-container">
-                                                    <div className="create-new-wrapper">
-                                                        <input
-                                                            id="event-duration"
-                                                            type="range"
-                                                            value={event_duration}
-                                                            min="15"
-                                                            max="150"
-                                                            step="15"
-                                                            onChange={(e) => setEventDuration(e.target.value)}
-                                                            disabled={!isGroupOrganizer}
-                                                            required
-                                                        />
-                                                        <label htmlFor="event-duration">Durations: {event_duration} minutes</label>
-                                                    </div>
-                                                </div>
-                                                <div className="create-form-container">
-                                                    <div className="create-new-wrapper">
-                                                        <input
-                                                            id="event-description"
-                                                            type="text"
-                                                            value={event_description}
-                                                            onChange={(e) => setEventDescription(e.target.value)}
-                                                            disabled={!isGroupOrganizer}
-                                                            required
-                                                        />
-                                                        <label htmlFor="event-description">Descriptions</label>
-                                                    </div>
-                                                </div>
-                                                <div className="create-form-container">
-                                                    <div className="create-new-wrapper">
-                                                        <select
-                                                            id="event-category"
-                                                            value={event_category}
-                                                            onChange={(e) => setEventCategory(e.target.value)}
-                                                            disabled={!isGroupOrganizer}
-                                                            required
-                                                        >
-                                                            <option value="">Select Category</option>
-                                                            <option value="Travel">Travel</option>
-                                                            <option value="Food">Food</option>
-                                                            <option value="Health & Fitness">Health & Fitness</option>
-                                                            <option value="Gaming">Gaming</option>
-                                                            <option value="Technology & Programming">Technology & Programming</option>
-                                                            <option value="Arts & Creativity">Arts & Creativity</option>
-                                                            <option value="Movies & Entertainment">Movies & Entertainment</option>
-                                                            <option value="Music">Music</option>
-                                                        </select>
-                                                        <label htmlFor="event-interest">Related Categories</label>
-                                                    </div>
-                                                </div>
-                                                <div className="create-form-container">
-                                                    <div className="create-new-wrapper">
-                                                        <input
-                                                            id="event-form"
-                                                            type="text"
-                                                            value={event_form}
-                                                            onChange={(e) => setEventForm(e.target.value)}
-                                                            disabled={!isGroupOrganizer}
-                                                            required
-                                                        />
-                                                        <label htmlFor="event-capacity">Capacity</label>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                            <div className="form-buttons">
-                                                    <button onClick={clearEventForm}>Clear All</button>
-                                                    <button onClick={handleSubmit}>Complete</button>
-                                            </div>
-                                        </div>
-                                    )}
-                                    {activeTab === 'groups' && (
                                         <div className="create-new-container">
                                             <h3 style={{color: "#1B4235", textAlign: "left", marginLeft:"5%"}}>Please complete all questions.</h3>
-                                            <form onSubmit={handleCreate}>
+                                            <form onSubmit={handleCreateGroup}>
+                                                <div className="create-form-container">
+                                                    <div className="create-new-wrapper">
+                                                        <input
+                                                            id="group-founder"
+                                                            type="text"
+                                                            value={username}
+                                                            //disabled={true}
+                                                            required
+                                                        />
+                                                        <label htmlFor="group-founder">Founder</label>
+                                                    </div>
+                                                </div>
                                                 <div className="create-form-container">
                                                     <div className="create-new-wrapper">
                                                         <input
@@ -702,7 +689,6 @@ function HomePage() {
                                                         <label htmlFor="email-address">Name</label>
                                                     </div>
                                                 </div>
-
                                                 <div className="create-form-container">
                                                     <div className="create-new-wrapper">
                                                         <input
@@ -727,7 +713,6 @@ function HomePage() {
                                                         <label htmlFor="email-address">Introduction</label>
                                                     </div>
                                                 </div>
-
                                                 <div className="create-form-container">
                                                     <div className="create-new-wrapper">
                                                         <input
@@ -740,7 +725,6 @@ function HomePage() {
                                                         <label htmlFor="email-address">Policy</label>
                                                     </div>
                                                 </div>
-
                                                 <div className="create-form-container">
                                                     <div className="create-new-wrapper">
                                                         <select
@@ -763,14 +747,173 @@ function HomePage() {
                                                     </div>
                                                 </div>
                                                 <div className="form-buttons">
+                                                    <button type="submit">Complete</button>
                                                     <button onClick={clearForm}>Clear All</button>
-                                                    <button onClick={handleSubmit}>Complete</button>
                                                 </div>
                                             </form>
                                         </div>
-                                    )}
+                                    </div>
                                 </div>
+                            </div>
+                        )};
+                        {isEventWindowOpen && (
+                            <div id="outside-window" className="outside-window" onClick={handleOutside}>
+                                <div className="window-content">
+                                    <span className="close-icon" onClick={closeEventWindow}>&times;</span>
+                                    <div className="events-groups-container">
+                                        <h3 style={{color: "#1B4235", textAlign: "left", marginLeft:"5%"}}>Please complete all questions.</h3>
+                                        <form onSubmit={handleCreateEvent}>
+                                            <div className="create-form-container">
+                                                <div className="create-new-wrapper">
+                                                    <select
+                                                        id="group-select"
+                                                        value={event_group}
+                                                        onChange={(e) => setEventGroup(e.target.value)}
+                                                        disabled={!isGroupOrganizer}
+                                                        required
+                                                    >
+                                                        {groups_own.length > 0 ? (
+                                                            groups_own.map((group) => (
+                                                                <option key={group.group_id} value={group.group_id}>
+                                                                    {group.group_name}
+                                                                </option>
+                                                            ))
+                                                        ) : (
+                                                            <option value="">You haven't created any group yet.</option>
+                                                        )}
+                                                    </select>
+                                                    <label htmlFor="event-group">Group</label>
+                                                </div>
+                                            </div>
+                                            <div className="create-form-container">
+                                                <div className="create-new-wrapper">
+                                                    <select
+                                                        id="event-tag2" value={event_tag2}
+                                                        onChange={(e) => setEventTag(e.target.value)}
+                                                        disabled={!isGroupOrganizer}
+                                                        required
+                                                    >
+                                                        {event_tags.map((tag) => (
+                                                            <option value={tag}>{tag}</option>
+                                                        ))}
+                                                    </select>
+                                                    <label htmlFor="event-tag2">Event Form</label>
+                                                </div>
+                                            </div>
+                                            <div className="create-form-container">
+                                                <div className="create-new-wrapper">
+                                                    <select
+                                                        id="event-category"
+                                                        value={event_category}
+                                                        onChange={(e) => setEventCategory(e.target.value)}
+                                                        disabled={!isGroupOrganizer}
+                                                        required
+                                                    >
+                                                        <option value="">Select Category</option>
+                                                        <option value="Travel">Travel</option>
+                                                        <option value="Food">Food</option>
+                                                        <option value="Health & Fitness">Health & Fitness</option>
+                                                        <option value="Gaming">Gaming</option>
+                                                        <option value="Technology & Programming">Technology & Programming</option>
+                                                        <option value="Arts & Creativity">Arts & Creativity</option>
+                                                        <option value="Movies & Entertainment">Movies & Entertainment</option>
+                                                        <option value="Music">Music</option>
+                                                    </select>
+                                                    <label htmlFor="event-category">Related Categories</label>
+                                                </div>
+                                            </div>
+                                            <div className="create-form-container">
+                                                <div className="create-new-wrapper">
+                                                    <input
+                                                        id="event-duration"
+                                                        type="range"
+                                                        value={event_duration}
+                                                        min="15"
+                                                        max="150"
+                                                        step="15"
+                                                        onChange={(e) => setEventDuration(e.target.value)}
+                                                        disabled={!isGroupOrganizer}
+                                                        required
+                                                    />
+                                                    <label htmlFor="event-duration">Durations: {event_duration} minutes</label>
+                                                </div>
+                                            </div>
+                                            <div className="create-form-container">
+                                                <div className="create-new-wrapper">
+                                                    <input
+                                                        id="event-capacity"
+                                                        type="number"
+                                                        className="input-number"
+                                                        min="1"
+                                                        max="100"
+                                                        value={event_capacity}
+                                                        onChange={handleCapacity}
+                                                        disabled={!isGroupOrganizer}
+                                                        required
+                                                    />
+                                                    <label htmlFor="event-capacity">Capacity</label>
+                                                </div>
+                                            </div>
+                                            <div className="create-form-container">
+                                                <div className="create-new-wrapper">
+                                                    <input
+                                                        id="event-name"
+                                                        type="text"
+                                                        value={event_name}
+                                                        onChange={(e) => setEventName(e.target.value)}
+                                                        disabled={!isGroupOrganizer}
+                                                        required
+                                                    />
+                                                    <label htmlFor="event-name">Event Name</label>
+                                                </div>
+                                            </div>
 
+                                            <div className="create-form-container">
+                                                <div className="create-new-wrapper">
+                                                    <input
+                                                        id="event-location"
+                                                        type="text"
+                                                        value={event_location}
+                                                        onChange={(e) => setEventLocation(e.target.value)}
+                                                        disabled={!isGroupOrganizer}
+                                                        required
+                                                    />
+                                                    <label htmlFor="event-location">Location</label>
+                                                </div>
+                                            </div>
+                                            <div className="create-form-container">
+                                                <div className="create-new-wrapper">
+                                                    <input
+                                                        id="event-time"
+                                                        type="datetime-local"
+                                                        className="input-number"
+                                                        value={event_time}
+                                                        onChange={(e) => setEventTime(e.target.value)}
+                                                        disabled={!isGroupOrganizer}
+                                                        required
+                                                    />
+                                                    <label htmlFor="event-time">Time</label>
+                                                </div>
+                                            </div>
+                                            <div className="create-form-container">
+                                                <div className="create-new-wrapper">
+                                                    <input
+                                                        id="event-description"
+                                                        type="text"
+                                                        value={event_description}
+                                                        onChange={(e) => setEventDescription(e.target.value)}
+                                                        disabled={!isGroupOrganizer}
+                                                        required
+                                                    />
+                                                    <label htmlFor="event-description">Descriptions</label>
+                                                </div>
+                                            </div>
+                                            <div className="form-buttons">
+                                                <button type="submit">Complete</button>
+                                                <button onClick={clearEventForm}>Clear All</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         )}

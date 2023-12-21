@@ -268,8 +268,17 @@
     border-radius: 10px;
 }
 
+.create-your-own-container{
+    align-items: center;
+    display: flex;
+    margin-left:10%;
+}
+
 .create-button{
     background: rgba(27, 66, 53, 0.7);
+    justify-content: flex-start;
+    display: flex;
+    width: 25%;
 }
 
 .outside-window {
@@ -338,7 +347,6 @@
     font-size: 16px;
     margin-bottom: 5px;
 }
-
 
 .form-buttons {
     margin: 20px;
@@ -484,4 +492,31 @@
 .delete-no:hover{
     background: #f1ebe5;
     color: #CF8282;
+}
+
+.your-groups-container{
+    background-color: rgba(255, 255, 255, 0.7);
+    width: 73%;
+    margin-left: 10%;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.ownGroups-container{
+    width: 27%;
+    margin: 15px;
+
+}
+
+.ownGroups-container img{
+    width: 100%;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.group-found-text{
+    font-weight: bold;
+    cursor: pointer;
 }

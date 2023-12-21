@@ -23,7 +23,7 @@ function ExplorePage() {
     const [activeTab, setActiveTab] = useState('groups');
     useEffect(() =>  {
         let url = 'https://coms6156-f23-sixguys.ue.r.appspot.com/groups?'
-        if (category!=" "){
+        if (category!==" "){
             let encodedCategory = encodeURIComponent(category);
             url += `category=${encodedCategory}`
         }
