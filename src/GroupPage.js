@@ -7,11 +7,10 @@ function GroupPage() {
     const navigate = useNavigate();
 
     const location = useLocation();
-    //const [username, setUsername] = useState(location.state.username);
-    const username = "hbebbell2k";
+    const [username, setUsername] = useState(location.state.username);
     const [groupID, setGroupID] = useState(location.state.group_id);
     const [groupName, setGroupName] = useState("");
-    const [groupFounder, setGroupFounder] = useState("");
+    const [groupFounder, setGroupFounder] = useState("jsumshon7");
     const [groupCity, setGroupCity] = useState("");
     const [groupState, setGroupState] = useState("");
     const [groupCategory, setGroupCategory] = useState("");
@@ -106,7 +105,6 @@ function GroupPage() {
                         setGroupMember([...groupMember, data])
                         navigate(0);
                     }
-
                 })
             .catch((error) => {
                 console.error('Error:', error);
@@ -338,9 +336,7 @@ function GroupPage() {
                                                             <button type="submit">Complete</button>
                                                             <button onClick={closeEditModal}>Close</button>
                                                         </div>
-
                                                     </form>
-
                                                 </div>
 
                                             </div>
@@ -396,7 +392,6 @@ function GroupPage() {
                             ) :(<p>Hi</p>)
                     )}
                 </div>
-
             </div>
         </div>
     );

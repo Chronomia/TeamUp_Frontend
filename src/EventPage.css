@@ -3,7 +3,7 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-image: url('/public/images/group.jpg');
+    background-image: url('/public/images/event.jpg');
     background-size: cover;
     background-position: center;
 }
@@ -15,4 +15,30 @@
     width: 95%;
     height: 95%;
     overflow-y: auto;
+}
+
+.comment-container{
+    justify-content: start;
+    margin-left: 5%;
+    width: 90%;
+}
+
+.event-comments-container{
+    background: white;
+    display: flex;
+    border-radius: 10px;
+    margin-bottom: 2%;
+    padding: 10px;
+    align-items: center;
+}
+
+.event-comments-container img{
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    border-radius: 10px;
+}
+
+.comment-text{
+    font-weight: normal;
 }

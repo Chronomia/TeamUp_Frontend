@@ -71,7 +71,6 @@
 .group-detail-navigator{
     display: flex;
     justify-content: flex-start;
-
 }
 
 .group-detail-navigator .active {
