@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
 import "./HomePage.css";
-import {v4 as uuidv4} from "uuid";
 function HomePage() {
     const navigate = useNavigate();
 
@@ -582,8 +581,8 @@ function HomePage() {
                                                     <div className="input-section">
                                                         <select id="gender-select" className="edit-select" value={gender} onChange={(e) => setGender(e.target.value)}>
                                                             <option value="">Select Gender</option>
-                                                            <option value="female">Female</option>
-                                                            <option value="male">Male</option>
+                                                            <option value="Female">Female</option>
+                                                            <option value="Male">Male</option>
                                                         </select>
                                                         <label htmlFor="gen-der" className="input-label">Gender</label>
                                                     </div>

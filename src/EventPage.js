@@ -224,7 +224,7 @@ function EventPage() {
             .then(data => {console.log(data)}).catch((error) => {console.error('Error:', error);});
         fetch(`http://3.134.34.54:8011/api/events/${eventID}/update_tag2?tag_2=${eventTag2}`, {method: 'PUT'})
             .then(response => response.json())
-            .then(data => {console.log(data); alert(`Group update successfully!`); navigate(0);}).catch((error) => {console.error('Error:', error);});
+            .then(data => {console.log(data); alert(`Event update successfully!`); navigate(0);}).catch((error) => {console.error('Error:', error);});
 
     }
 

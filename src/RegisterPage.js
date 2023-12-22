@@ -56,7 +56,7 @@ function RegisterPage() {
     }
 
     const interests = [
-        {id: "Travel", name: "Travel"},
+        {id: "travel", name: "Travel"},
         {id: "food", name: "Food"},
         {id: "health", name: "Health & Fitness"},
         {id: "game", name: "Gaming"},
@@ -189,8 +189,8 @@ function RegisterPage() {
                       <div className="input-wrapper">
                           <select id="gender-select" className="profile-select" value={gender} onChange={(e) => setGender(e.target.value)}>
                               <option value="">Select Gender</option>
-                              <option value="female">Female</option>
-                              <option value="male">Male</option>
+                              <option value="Female">Female</option>
+                              <option value="Male">Male</option>
                           </select>
                           <label htmlFor="gen-der">Gender</label>
                       </div>

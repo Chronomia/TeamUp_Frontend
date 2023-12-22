@@ -1,14 +1,13 @@
 import React, {useEffect, useState} from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
 import "./GroupPage.css";
-import {v4 as uuidv4} from "uuid";
 
 function GroupPage() {
     const navigate = useNavigate();
 
     const location = useLocation();
-    const username = useState(location.state.username);
-    const groupID = useState(location.state.group_id);
+    const [username, setUsername] = useState(location.state.username);
+    const [groupID, setGroupID] = useState(location.state.group_id);
     const [groupName, setGroupName] = useState("");
     const [groupFounder, setGroupFounder] = useState("jsumshon7");
     const [groupCity, setGroupCity] = useState("");
@@ -389,7 +388,7 @@ function GroupPage() {
 
                                 ))}
                             </div>
-                            ) :(<p>Hi</p>)
+                            ) :(<p>No one join the group yet.</p>)
                     )}
                 </div>
             </div>
